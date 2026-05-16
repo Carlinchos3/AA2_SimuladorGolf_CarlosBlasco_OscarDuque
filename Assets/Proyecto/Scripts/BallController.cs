@@ -42,12 +42,12 @@ public class BallController : MonoBehaviour
     {
         if (!grounded) return;
 
-        // Fricción de rodadura
-        Vector3 friction = -velocity.normalized * frictionCoefficient;
-
         // Evitar NaN
         if (velocity.magnitude > 0.01f)
         {
+            // Fricción de rodadura
+            Vector3 friction = -velocity.normalized * frictionCoefficient * gravity;
+
             acceleration += friction;
         }
     }
@@ -102,15 +102,27 @@ public class BallController : MonoBehaviour
 
     void CheckGround()
     {
+        RaycastHit hit;
+
         grounded = Physics.Raycast(
             transform.position,
             Vector3.down,
+            out hit,
             radius + 0.1f,
             groundLayer
         );
+
+        if (grounded)
+        {
+            TerrainZone terrain =
+                hit.collider.GetComponent<TerrainZone>();
+
+            if (terrain != null)
+            {
+                frictionCoefficient = terrain.GetFriction();
+            }
+        }
     }
-
-
 
     void RotateBall()
     {

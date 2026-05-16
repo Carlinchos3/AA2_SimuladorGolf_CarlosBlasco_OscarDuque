@@ -5,16 +5,21 @@ public class PlayerInput : MonoBehaviour
     public BallController ball;
     public LineRenderer line;
 
-    private Vector3 startMouse;
-    private Vector3 endMouse;
+    public float forceMultiplier = 0.02f;
+    public float maxForce = 15f;
 
-    private bool dragging = false;
+    private Vector3 startMouse;
+    private bool dragging;
 
     void Update()
     {
         // EMPEZAR DRAG
         if (Input.GetMouseButtonDown(0))
         {
+            // No permitir disparar si la bola se mueve
+            if (ball.velocity.magnitude > 0.1f)
+                return;
+
             startMouse = Input.mousePosition;
             dragging = true;
         }
@@ -30,7 +35,11 @@ public class PlayerInput : MonoBehaviour
                 drag.x,
                 0,
                 drag.y
-            ) * 0.02f;
+            );
+
+            force *= forceMultiplier;
+
+            force = Vector3.ClampMagnitude(force, maxForce);
 
             force = -force;
 
@@ -38,11 +47,19 @@ public class PlayerInput : MonoBehaviour
         }
 
         // SOLTAR
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && dragging)
         {
+            // Seguridad extra
+            if (ball.velocity.magnitude > 0.1f)
+            {
+                dragging = false;
+                line.enabled = false;
+                return;
+            }
+
             dragging = false;
 
-            endMouse = Input.mousePosition;
+            Vector3 endMouse = Input.mousePosition;
 
             Vector3 drag = endMouse - startMouse;
 
@@ -50,7 +67,11 @@ public class PlayerInput : MonoBehaviour
                 drag.x,
                 0,
                 drag.y
-            ) * 0.1f;
+            );
+
+            force *= forceMultiplier;
+
+            force = Vector3.ClampMagnitude(force, maxForce);
 
             force = -force;
 
@@ -65,9 +86,8 @@ public class PlayerInput : MonoBehaviour
         line.enabled = true;
 
         Vector3 startPos = ball.transform.position;
-        Vector3 endPos = startPos + force;
 
         line.SetPosition(0, startPos);
-        line.SetPosition(1, endPos);
+        line.SetPosition(1, startPos + force);
     }
 }

@@ -28,19 +28,11 @@ public class PlayerInput : MonoBehaviour
         if (dragging)
         {
             Vector3 currentMouse = Input.mousePosition;
-
             Vector3 drag = currentMouse - startMouse;
-
-            Vector3 force = new Vector3(
-                drag.x,
-                0,
-                drag.y
-            );
+            Vector3 force = new Vector3(drag.x, 0, drag.y);
 
             force *= forceMultiplier;
-
             force = Vector3.ClampMagnitude(force, maxForce);
-
             force = -force;
 
             DrawLine(force);
@@ -60,19 +52,11 @@ public class PlayerInput : MonoBehaviour
             dragging = false;
 
             Vector3 endMouse = Input.mousePosition;
-
             Vector3 drag = endMouse - startMouse;
-
-            Vector3 force = new Vector3(
-                drag.x,
-                0,
-                drag.y
-            );
+            Vector3 force = new Vector3(drag.x, 0, drag.y );
 
             force *= forceMultiplier;
-
             force = Vector3.ClampMagnitude(force, maxForce);
-
             force = -force;
 
             ball.HitBall(force);

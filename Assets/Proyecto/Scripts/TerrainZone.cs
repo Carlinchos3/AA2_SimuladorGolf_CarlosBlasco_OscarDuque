@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class TerrainZone : MonoBehaviour
 {
-    public TerrainType terrainType;
+    public GroundType groundType;
 
     public float GetFriction()
     {
-        switch (terrainType)
+        switch (groundType)
         {
-            case TerrainType.Ice:
+            case GroundType.Grass:
+                return 0.4f;
+
+            case GroundType.Ice:
                 return 0.1f;
 
-            case TerrainType.Sand:
+            case GroundType.Sand:
                 return 0.6f;
 
             default:

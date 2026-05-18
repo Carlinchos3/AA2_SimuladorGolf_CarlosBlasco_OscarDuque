@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Hole : MonoBehaviour
 {
@@ -29,5 +30,16 @@ public class Hole : MonoBehaviour
         ball.StopBall();
 
         Debug.Log("LEVEL COMPLETE");
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        if (currentSceneIndex == 3)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(currentSceneIndex + 1);
+        }
     }
 }

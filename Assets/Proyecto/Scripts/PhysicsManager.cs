@@ -6,7 +6,8 @@ public class PhysicsManager : MonoBehaviour
 
     [Header("Layers")]
     public LayerMask groundLayer;
-    public LayerMask wallLayer;
+    public LayerMask wallLayer; 
+    public LayerMask airZoneLayer;
 
     [Header("Ground")]
     public bool grounded;
@@ -26,6 +27,8 @@ public class PhysicsManager : MonoBehaviour
 
         ApplyGravity();
         ApplyFriction();
+
+        ApplyAirZones();
 
         Integrate(dt);
 
@@ -137,6 +140,27 @@ public class PhysicsManager : MonoBehaviour
 
             if (terrain != null)
                 frictionCoefficient = terrain.GetFriction();
+        }
+    }
+
+    void ApplyAirZones()
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            ball.transform.position,
+            ball.radius,
+            airZoneLayer
+        );
+
+        foreach (Collider hit in hits)
+        {
+            AirZone airZone = hit.GetComponent<AirZone>();
+
+            if (airZone == null)
+                continue;
+
+            Vector3 direction = airZone.GetDirection();
+
+            ball.acceleration += direction * airZone.strength;
         }
     }
 }

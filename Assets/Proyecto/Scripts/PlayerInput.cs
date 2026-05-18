@@ -11,6 +11,8 @@ public class PlayerInput : MonoBehaviour
     private Vector3 startMouse;
     private bool dragging;
 
+    public CameraFollow cam;
+
     void Update()
     {
         // EMPEZAR DRAG
@@ -36,6 +38,8 @@ public class PlayerInput : MonoBehaviour
             force = -force;
 
             DrawLine(force);
+
+            cam.SetCameraDirection(force);
         }
 
         // SOLTAR

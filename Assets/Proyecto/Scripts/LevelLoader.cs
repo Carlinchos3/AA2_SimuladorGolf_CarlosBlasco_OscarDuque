@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuManager : MonoBehaviour
+public class LevelLoader : MonoBehaviour
 {
     //Singleton
-    public static MenuManager Instance;
+    public static LevelLoader Instance;
     private void Awake()
     {
         if (Instance == null)
